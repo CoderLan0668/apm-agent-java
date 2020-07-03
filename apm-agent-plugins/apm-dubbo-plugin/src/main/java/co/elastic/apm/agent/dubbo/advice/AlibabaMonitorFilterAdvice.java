@@ -87,7 +87,7 @@ public class AlibabaMonitorFilterAdvice {
 
     @Advice.OnMethodExit(suppress = Throwable.class, onThrowable = Throwable.class)
     public static void onExitFilterInvoke(@Advice.Argument(1) Invocation invocation,
-                                          @Advice.Return Result result,
+                                          @Nullable @Advice.Return Result result,
                                           @Nullable @Advice.Local("span") Span span,
                                           @Nullable @Advice.Thrown Throwable t,
                                           @Nullable @Advice.Local("transaction") Transaction transaction) {
@@ -96,7 +96,7 @@ public class AlibabaMonitorFilterAdvice {
             return;
         }
         actualSpan.captureException(t)
-            .captureException(result.getException())
+            .captureException(result != null ? result.getException() : null)
             .deactivate();
         if (!(RpcContext.getContext().getFuture() instanceof FutureAdapter)) {
             actualSpan.end();
