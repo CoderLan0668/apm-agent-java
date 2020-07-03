@@ -74,7 +74,7 @@ public class AlibabaMonitorFilterAdvice {
             if (span != null) {
                 span.propagateTraceContext(invocation, helper);
             }
-        } else if (active == null) {
+        } else if (context.isProviderSide() && active == null) {
             // for provider side
             transaction = tracer.startChildTransaction(invocation, helper, Invocation.class.getClassLoader());
             if (transaction != null) {
