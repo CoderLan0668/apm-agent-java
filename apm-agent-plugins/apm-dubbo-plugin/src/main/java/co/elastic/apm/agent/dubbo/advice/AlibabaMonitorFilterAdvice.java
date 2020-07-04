@@ -62,7 +62,7 @@ public class AlibabaMonitorFilterAdvice {
                                            @Advice.Local("apiClazz") Class<?> apiClazz,
                                            @Advice.Local("transaction") Transaction transaction) {
         RpcContext context = RpcContext.getContext();
-        AlibabaDubboAttachmentHelper helper = helperManager.getForClassLoaderOfClass(Invocation.class);
+        AlibabaDubboAttachmentHelper helper = helperManager.getForClassLoaderOfClass(RpcContext.class);
         if (helper == null || tracer == null) {
             return;
         }
@@ -72,11 +72,11 @@ public class AlibabaMonitorFilterAdvice {
             span = DubboTraceHelper.createConsumerSpan(tracer, invocation.getInvoker().getInterface(),
                 invocation.getMethodName(), context.getRemoteAddress());
             if (span != null) {
-                span.propagateTraceContext(invocation, helper);
+                span.propagateTraceContext(context, helper);
             }
         } else if (context.isProviderSide() && active == null) {
             // for provider side
-            transaction = tracer.startChildTransaction(invocation, helper, Invocation.class.getClassLoader());
+            transaction = tracer.startChildTransaction(context, helper, Invocation.class.getClassLoader());
             if (transaction != null) {
                 transaction.activate();
                 DubboTraceHelper.fillTransaction(transaction, invocation.getInvoker().getInterface(), invocation.getMethodName());

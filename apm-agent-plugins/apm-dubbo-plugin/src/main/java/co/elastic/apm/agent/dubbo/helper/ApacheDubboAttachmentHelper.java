@@ -26,7 +26,7 @@ package co.elastic.apm.agent.dubbo.helper;
 
 import co.elastic.apm.agent.impl.transaction.TextHeaderGetter;
 import co.elastic.apm.agent.impl.transaction.TextHeaderSetter;
-import org.apache.dubbo.rpc.Invocation;
+import org.apache.dubbo.rpc.RpcContext;
 
-public interface ApacheDubboAttachmentHelper extends TextHeaderGetter<Invocation>, TextHeaderSetter<Invocation> {
+public interface ApacheDubboAttachmentHelper extends TextHeaderGetter<RpcContext>, TextHeaderSetter<RpcContext> {
 }

@@ -24,7 +24,7 @@
  */
 package co.elastic.apm.agent.dubbo.helper;
 
-import com.alibaba.dubbo.rpc.Invocation;
+import com.alibaba.dubbo.rpc.RpcContext;
 
 import javax.annotation.Nullable;
 
@@ -32,17 +32,17 @@ public class AlibabaDubboAttachmentHelperImpl implements AlibabaDubboAttachmentH
 
     @Nullable
     @Override
-    public String getFirstHeader(String headerName, Invocation invocation) {
-        return invocation.getAttachment(headerName);
+    public String getFirstHeader(String headerName, RpcContext rpcContext) {
+        return rpcContext.getAttachment(headerName);
     }
 
     @Override
-    public <S> void forEach(String headerName, Invocation invocation, S state, HeaderConsumer<String, S> consumer) {
-        consumer.accept(invocation.getAttachment(headerName), state);
+    public <S> void forEach(String headerName, RpcContext rpcContext, S state, HeaderConsumer<String, S> consumer) {
+        consumer.accept(rpcContext.getAttachment(headerName), state);
     }
 
     @Override
-    public void setHeader(String headerName, String headerValue, Invocation invocation) {
-        invocation.getAttachments().put(headerName, headerValue);
+    public void setHeader(String headerName, String headerValue, RpcContext rpcContext) {
+        rpcContext.setAttachment(headerName, headerValue);
     }
 }
