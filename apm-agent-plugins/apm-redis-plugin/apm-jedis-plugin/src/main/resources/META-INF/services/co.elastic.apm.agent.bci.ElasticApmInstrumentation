@@ -1,2 +1,3 @@
 co.elastic.apm.agent.redis.jedis.JedisInstrumentation
 co.elastic.apm.agent.redis.jedis.JedisSpanNameInstrumentation
+co.elastic.apm.agent.redis.jedis.PoolInstrumentation
