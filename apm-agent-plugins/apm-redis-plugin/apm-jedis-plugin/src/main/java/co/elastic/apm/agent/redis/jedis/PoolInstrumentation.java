@@ -31,13 +31,14 @@ import net.bytebuddy.asm.Advice;
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.matcher.ElementMatcher;
+import net.bytebuddy.matcher.ElementMatchers;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 
 import static net.bytebuddy.matcher.ElementMatchers.hasSuperClass;
-import static net.bytebuddy.matcher.ElementMatchers.isInterface;
+import static net.bytebuddy.matcher.ElementMatchers.isAbstract;
 import static net.bytebuddy.matcher.ElementMatchers.named;
 import static net.bytebuddy.matcher.ElementMatchers.not;
 
@@ -45,7 +46,7 @@ public class PoolInstrumentation extends ElasticApmInstrumentation {
 
     @Override
     public ElementMatcher<? super TypeDescription> getTypeMatcher() {
-        return not(isInterface()).and(hasSuperClass(named("redis.clients.util.Pool")));
+        return hasSuperClass(named("redis.clients.util.Pool")).and(not(isAbstract()));
     }
 
     @Override
