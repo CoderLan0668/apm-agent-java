@@ -56,7 +56,7 @@ public class DataSourceInstrumentation extends JdbcInstrumentation {
     }
 
     @Advice.OnMethodEnter(suppress = Throwable.class)
-    public static void onEnter(@Nullable @Advice.Local("span") Span span) {
+    public static void onEnter(@Nullable @Advice.Local("span") Object span) {
         if (tracer == null || tracer.getActive() == null) {
             return;
         }
@@ -68,9 +68,9 @@ public class DataSourceInstrumentation extends JdbcInstrumentation {
     }
 
     @Advice.OnMethodExit(suppress = Throwable.class)
-    public static void onExit(@Nullable @Advice.Local("span") Span span) {
+    public static void onExit(@Nullable @Advice.Local("span") Object span) {
         if (span != null) {
-            span.deactivate().end();
+            ((Span) span).deactivate().end();
         }
     }
 }
