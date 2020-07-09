@@ -50,20 +50,21 @@ public class DataSourceInstrumentation extends JdbcInstrumentation {
         return named("getConnection");
     }
 
+    @Nullable
     @Advice.OnMethodEnter(suppress = Throwable.class, inline = false)
-    public static void onEnter(@Nullable @Advice.Local("span") Object span) {
+    public static Object onEnter() {
         if (tracer.getActive() == null) {
-            return;
+            return null;
         }
 
         AbstractSpan<?> parent = tracer.getActive();
-        span = parent.createSpan()
+        return parent.createSpan()
             .withName("DataSource#getConnection")
             .activate();
     }
 
     @Advice.OnMethodExit(suppress = Throwable.class, inline = false)
-    public static void onExit(@Nullable @Advice.Local("span") Object span) {
+    public static void onExit(@Nullable @Advice.Enter Object span) {
         if (span != null) {
             ((Span) span).deactivate().end();
         }
