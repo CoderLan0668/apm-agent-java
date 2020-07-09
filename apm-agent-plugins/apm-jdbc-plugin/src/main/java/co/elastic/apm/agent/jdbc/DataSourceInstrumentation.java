@@ -50,7 +50,7 @@ public class DataSourceInstrumentation extends JdbcInstrumentation {
         return named("getConnection");
     }
 
-    @Advice.OnMethodEnter(suppress = Throwable.class)
+    @Advice.OnMethodEnter(suppress = Throwable.class, inline = false)
     public static void onEnter(@Nullable @Advice.Local("span") Object span) {
         if (tracer.getActive() == null) {
             return;
@@ -62,7 +62,7 @@ public class DataSourceInstrumentation extends JdbcInstrumentation {
             .activate();
     }
 
-    @Advice.OnMethodExit(suppress = Throwable.class)
+    @Advice.OnMethodExit(suppress = Throwable.class, inline = false)
     public static void onExit(@Nullable @Advice.Local("span") Object span) {
         if (span != null) {
             ((Span) span).deactivate().end();
