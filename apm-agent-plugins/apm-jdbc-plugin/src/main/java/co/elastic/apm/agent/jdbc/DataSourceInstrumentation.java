@@ -24,7 +24,6 @@
  */
 package co.elastic.apm.agent.jdbc;
 
-import co.elastic.apm.agent.impl.ElasticApmTracer;
 import co.elastic.apm.agent.impl.transaction.AbstractSpan;
 import co.elastic.apm.agent.impl.transaction.Span;
 import net.bytebuddy.asm.Advice;
@@ -41,10 +40,6 @@ import static net.bytebuddy.matcher.ElementMatchers.not;
 
 public class DataSourceInstrumentation extends JdbcInstrumentation {
 
-    public DataSourceInstrumentation(ElasticApmTracer tracer) {
-        super(tracer);
-    }
-
     @Override
     public ElementMatcher<? super TypeDescription> getTypeMatcher() {
         return not(isInterface()).and(hasSuperType(named("javax.sql.DataSource")));
@@ -57,7 +52,7 @@ public class DataSourceInstrumentation extends JdbcInstrumentation {
 
     @Advice.OnMethodEnter(suppress = Throwable.class)
     public static void onEnter(@Nullable @Advice.Local("span") Object span) {
-        if (tracer == null || tracer.getActive() == null) {
+        if (tracer.getActive() == null) {
             return;
         }
 
