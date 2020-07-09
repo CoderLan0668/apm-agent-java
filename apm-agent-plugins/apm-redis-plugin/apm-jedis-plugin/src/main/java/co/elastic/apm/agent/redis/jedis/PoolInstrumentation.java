@@ -24,7 +24,7 @@
  */
 package co.elastic.apm.agent.redis.jedis;
 
-import co.elastic.apm.agent.bci.ElasticApmInstrumentation;
+import co.elastic.apm.agent.bci.TracerAwareInstrumentation;
 import co.elastic.apm.agent.impl.transaction.AbstractSpan;
 import co.elastic.apm.agent.impl.transaction.Span;
 import net.bytebuddy.asm.Advice;
@@ -41,7 +41,7 @@ import static net.bytebuddy.matcher.ElementMatchers.isAbstract;
 import static net.bytebuddy.matcher.ElementMatchers.named;
 import static net.bytebuddy.matcher.ElementMatchers.not;
 
-public class PoolInstrumentation extends ElasticApmInstrumentation {
+public class PoolInstrumentation extends TracerAwareInstrumentation {
 
     @Override
     public ElementMatcher<? super TypeDescription> getTypeMatcher() {
@@ -60,7 +60,7 @@ public class PoolInstrumentation extends ElasticApmInstrumentation {
 
     @Advice.OnMethodEnter(suppress = Throwable.class)
     public static void onEnter(@Nullable @Advice.Local("span") Span span) {
-        if (tracer == null || tracer.getActive() == null) {
+        if (tracer.getActive() == null) {
             return;
         }
 
